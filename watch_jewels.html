@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch Jewels · Non-Shock Protected</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0608;--surface:#130a0c;--card:#1a0e11;--card2:#201218;
+  --border:rgba(180,60,60,.07);--border2:rgba(180,60,60,.14);
+  --text:#c8b8b0;--muted:#6a4a4a;--bright:#f0e8e0;
+  --ruby:#c03848;--ruby-dim:rgba(192,56,72,.09);--ruby-mid:rgba(192,56,72,.18);
+  --gold:#c8943a;--gold-dim:rgba(200,148,58,.09);
+  --rose:#d86070;--rose-dim:rgba(216,96,112,.09);
+  --sage:#5a8060;--sage-dim:rgba(90,128,96,.09);
+  --sky:#4878a0;--sky-dim:rgba(72,120,160,.09);
+  --sw:272px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-weight:300;line-height:1.75;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 30% at 50% -10%,rgba(192,56,72,.08) 0%,transparent 70%);pointer-events:none;z-index:0;}
+.app{display:grid;grid-template-columns:var(--sw) 1fr;height:100vh;overflow:hidden;position:relative;z-index:1;}
+.sidebar{background:var(--surface);border-right:1px solid var(--border2);display:flex;flex-direction:column;overflow:hidden;}
+.sb-head{padding:24px 18px 0;flex-shrink:0;}
+.sb-gem{width:26px;height:26px;margin-bottom:10px;background:linear-gradient(135deg,var(--ruby) 0%,#8a1828 60%,#4a0810 100%);clip-path:polygon(50% 0%,100% 35%,80% 100%,20% 100%,0% 35%);box-shadow:0 0 12px rgba(192,56,72,.3);}
+.sb-title{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--bright);line-height:1.3;letter-spacing:.5px;margin-bottom:2px;}
+.sb-sub{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.sb-rule{height:1px;background:linear-gradient(90deg,var(--ruby-mid),transparent);margin:14px 0 6px;}
+.sb-nav{flex:1;overflow-y:auto;padding:0 10px 10px;}
+.sb-nav::-webkit-scrollbar{width:2px;}
+.sb-nav::-webkit-scrollbar-thumb{background:rgba(192,56,72,.2);}
+.sb-grp{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ruby);padding:14px 8px 4px;opacity:.7;}
+.sb-item{padding:6px 10px;border-radius:3px;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:8px;transition:all .13s;line-height:1.35;}
+.sb-item:hover{background:var(--ruby-dim);color:var(--text);}
+.sb-item.active{background:var(--ruby-mid);color:var(--bright);font-weight:600;}
+.sb-n{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);flex-shrink:0;margin-top:2px;}
+.sb-item.active .sb-n{color:var(--ruby);}
+.sb-foot{padding:12px 18px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-foot p{font-size:10px;color:var(--muted);line-height:1.7;font-family:'DM Mono',monospace;}
+.main{overflow-y:auto;}
+.main::-webkit-scrollbar{width:3px;}
+.main::-webkit-scrollbar-thumb{background:rgba(192,56,72,.15);}
+.panel{display:none;padding:38px 46px 68px;max-width:860px;}
+.panel.active{display:block;}
+.ph{margin-bottom:30px;}
+.ph-eyebrow{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--ruby);margin-bottom:12px;opacity:.85;}
+.ph h1{font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:var(--bright);line-height:1.1;margin-bottom:10px;letter-spacing:.5px;}
+.ph h1 em{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;color:var(--ruby);font-size:34px;}
+.ph p{font-size:16px;color:var(--text);max-width:620px;line-height:1.8;}
+.ph-rule{height:1px;background:linear-gradient(90deg,rgba(192,56,72,.4),rgba(200,148,58,.15),transparent);margin-top:22px;}
+.sdiv{display:flex;align-items:center;gap:12px;margin:28px 0 14px;}
+.sdiv-tag{font-family:'DM Mono',monospace;font-size:7.5px;background:var(--ruby-dim);color:var(--ruby);border:1px solid rgba(192,56,72,.2);border-radius:2px;padding:2px 7px;flex-shrink:0;letter-spacing:2px;text-transform:uppercase;}
+.sdiv-line{flex:1;height:1px;background:var(--border2);}
+.sdiv-text{font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);flex-shrink:0;}
+.prose{font-size:15.5px;color:var(--text);line-height:1.85;margin:10px 0;}
+.prose strong{color:var(--bright);font-weight:600;}
+.jt{width:100%;border-collapse:collapse;margin:14px 0;}
+.jt thead tr{border-bottom:1px solid var(--border2);}
+.jt th{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--ruby);padding:9px 14px;text-align:left;}
+.jt td{padding:9px 14px;border-bottom:1px solid var(--border);font-size:14px;color:var(--text);vertical-align:top;line-height:1.6;}
+.jt tr:last-child td{border-bottom:none;}
+.jt tr:hover td{background:var(--card);}
+.jt td:first-child{font-family:'DM Mono',monospace;font-size:11px;color:var(--ruby);white-space:nowrap;}
+.jt td:nth-child(2){color:var(--gold);}
+.jt td strong{color:var(--bright);font-weight:600;}
+.callout{border-left:2px solid var(--ruby);padding:12px 16px;background:var(--ruby-dim);border-radius:0 4px 4px 0;margin:12px 0;font-size:14.5px;color:var(--text);line-height:1.75;}
+.callout.gold{border-color:var(--gold);background:var(--gold-dim);}
+.callout.sage{border-color:var(--sage);background:var(--sage-dim);}
+.callout.sky{border-color:var(--sky);background:var(--sky-dim);}
+.callout strong{color:var(--bright);font-weight:600;}
+.warn{background:var(--ruby-dim);border:1px solid rgba(192,56,72,.18);border-radius:4px;padding:13px 16px;margin:12px 0;display:flex;gap:10px;}
+.warn-icon{color:var(--ruby);flex-shrink:0;font-size:13px;margin-top:3px;}
+.warn-text{font-size:14px;color:#c8b0a8;line-height:1.7;}
+.warn-text strong{color:var(--rose);font-weight:600;}
+.step-list{display:flex;flex-direction:column;gap:6px;margin:13px 0;}
+.step-item{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:12px 16px;align-items:flex-start;}
+.step-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--ruby);min-width:22px;margin-top:3px;flex-shrink:0;}
+.step-title{font-size:12.5px;color:var(--bright);font-weight:600;margin-bottom:3px;line-height:1.35;font-family:'Cinzel',serif;letter-spacing:.3px;}
+.step-detail{font-size:14.5px;color:#a09088;line-height:1.7;}
+.step-detail strong{color:var(--text);font-weight:600;}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:7px;margin:13px 0;}
+.cg-card{background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.cg-head{padding:8px 13px;font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:2px;text-transform:uppercase;}
+.cg-head.ruby{background:var(--ruby-dim);color:var(--ruby);border-bottom:1px solid rgba(192,56,72,.12);}
+.cg-head.gold{background:var(--gold-dim);color:var(--gold);border-bottom:1px solid rgba(200,148,58,.12);}
+.cg-head.sage{background:var(--sage-dim);color:var(--sage);border-bottom:1px solid rgba(90,128,96,.12);}
+.cg-head.sky{background:var(--sky-dim);color:var(--sky);border-bottom:1px solid rgba(72,120,160,.12);}
+.cg-body{padding:11px 13px;font-size:14px;color:#a09088;line-height:1.7;}
+.cg-body strong{color:var(--bright);}
+.mohs{display:flex;gap:6px;margin:13px 0;flex-wrap:wrap;}
+.mohs-item{flex:1;min-width:100px;background:var(--card);border:1px solid var(--border2);border-radius:4px;padding:11px 12px;text-align:center;}
+.mohs-val{font-family:'DM Mono',monospace;font-size:22px;line-height:1;margin-bottom:4px;}
+.mohs-val.r{color:var(--ruby);}
+.mohs-val.g{color:var(--gold);}
+.mohs-name{font-family:'Cinzel',serif;font-size:10px;color:var(--bright);letter-spacing:.5px;margin-bottom:3px;}
+.mohs-note{font-size:11px;color:var(--muted);line-height:1.4;}
+.jdg{background:var(--card);border:1px solid var(--border2);border-radius:4px;padding:16px;margin:13px 0;}
+.jdg-title{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--ruby);margin-bottom:12px;opacity:.8;}
+.jdg-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:5px;}
+.jdg-item{display:flex;align-items:center;gap:9px;padding:5px 8px;background:var(--card2);border-radius:3px;border:1px solid var(--border);}
+.jdg-gem{width:8px;height:8px;background:var(--ruby);border-radius:50%;flex-shrink:0;box-shadow:0 0 4px rgba(192,56,72,.4);}
+.jdg-gem.gld{background:var(--gold);box-shadow:0 0 4px rgba(200,148,58,.4);}
+.jdg-label{font-size:12.5px;color:var(--text);}
+.jdg-count{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto;}
+.oil-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:13px 0;}
+.oil-card{background:var(--card);border:1px solid var(--border2);border-radius:4px;padding:13px;text-align:center;}
+.oil-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.oil-svg{display:block;margin:0 auto 8px;}
+.oil-desc{font-size:12.5px;color:#a09088;line-height:1.5;}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:13px 0;}
+.fg-card{background:var(--card);border:1px solid var(--border2);border-radius:4px;overflow:hidden;}
+.fg-head{padding:7px 12px;font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;gap:7px;}
+.fg-head.bad{background:var(--ruby-dim);color:var(--ruby);border-bottom:1px solid rgba(192,56,72,.12);}
+.fg-head.ok{background:var(--sage-dim);color:var(--sage);border-bottom:1px solid rgba(90,128,96,.12);}
+.fg-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.fg-body{padding:10px 13px;font-size:13.5px;color:#a09088;line-height:1.7;}
+.fg-body strong{color:var(--bright);}
+.hamburger{display:none;position:fixed;top:14px;left:14px;z-index:100;background:var(--card);border:1px solid var(--border2);border-radius:3px;padding:8px 10px;cursor:pointer;color:var(--ruby);font-size:16px;}
+@media(max-width:820px){
+  .app{grid-template-columns:1fr;}
+  .sidebar{position:fixed;left:-100%;top:0;height:100vh;width:272px;z-index:99;transition:left .25s;}
+  .sidebar.open{left:0;}
+  .hamburger{display:block;}
+  .panel{padding:24px 18px 60px;}
+  .main{padding-top:52px;}
+  .oil-row{grid-template-columns:1fr;}
+  .fg{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+<div class="app">
+<aside class="sidebar">
+  <div class="sb-head">
+    <div class="sb-gem"></div>
+    <div class="sb-title">Watch Jewels<br>Non-Shock Protected</div>
+    <div class="sb-sub">Reference &amp; Repair Guide</div>
+    <div class="sb-rule"></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-grp">Fundamentals</div>
+    <div class="sb-item active" onclick="nav(this,'p0')"><span class="sb-n">01</span>History &amp; Materials</div>
+    <div class="sb-item" onclick="nav(this,'p1')"><span class="sb-n">02</span>Purpose of Jewels</div>
+    <div class="sb-item" onclick="nav(this,'p2')"><span class="sb-n">03</span>Jewel Count by Grade</div>
+    <div class="sb-grp">Jewel Types</div>
+    <div class="sb-item" onclick="nav(this,'p3')"><span class="sb-n">04</span>Bezel vs. Friction Jewels</div>
+    <div class="sb-item" onclick="nav(this,'p4')"><span class="sb-n">05</span>Cap Jewel Assemblies</div>
+    <div class="sb-item" onclick="nav(this,'p5')"><span class="sb-n">06</span>Olive-Hole &amp; Convex Jewels</div>
+    <div class="sb-grp">Replacement Procedure</div>
+    <div class="sb-item" onclick="nav(this,'p6')"><span class="sb-n">07</span>Removing Old Jewels</div>
+    <div class="sb-item" onclick="nav(this,'p7')"><span class="sb-n">08</span>Opening the Bezel</div>
+    <div class="sb-item" onclick="nav(this,'p8')"><span class="sb-n">09</span>Sizing the New Jewel</div>
+    <div class="sb-item" onclick="nav(this,'p9')"><span class="sb-n">10</span>Closing the Bezel</div>
+    <div class="sb-grp">Faults &amp; Diagnosis</div>
+    <div class="sb-item" onclick="nav(this,'p10')"><span class="sb-n">11</span>Out-of-Parallel Assemblies</div>
+    <div class="sb-item" onclick="nav(this,'p11')"><span class="sb-n">12</span>Oil Space Faults</div>
+    <div class="sb-item" onclick="nav(this,'p12')"><span class="sb-n">13</span>Over-Oiling Consequences</div>
+    <div class="sb-grp">Settings &amp; Special Types</div>
+    <div class="sb-item" onclick="nav(this,'p13')"><span class="sb-n">14</span>Cap Jewel Setting Styles</div>
+    <div class="sb-item" onclick="nav(this,'p14')"><span class="sb-n">15</span>Diamond Cap Jewels</div>
+    <div class="sb-item" onclick="nav(this,'p15')"><span class="sb-n">16</span>English Lever &amp; Verge</div>
+  </nav>
+  <div class="sb-foot"><p>Non-Shock Protected Jewels<br>Balance, Train &amp; Cap Jewels<br>Settings, Faults &amp; Repair</p></div>
+</aside>
+
+<main class="main">
+
+<div class="panel active" id="p0">
+  <div class="ph">
+    <div class="ph-eyebrow">Fundamentals · Section 01</div>
+    <h1>History &amp; <em>Materials</em></h1>
+    <p>Jewels have been used in watches since 1704, invented in the 1690s by Nicholas Facio. From garnet to synthetic corundum — the materials evolved dramatically over three centuries, each step reducing friction and improving reliability.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="sdiv"><span class="sdiv-tag">MOHS</span><div class="sdiv-line"></div><span class="sdiv-text">Hardness Scale Comparison</span></div>
+  <div class="mohs">
+    <div class="mohs-item"><div class="mohs-val r">7</div><div class="mohs-name">Garnet</div><div class="mohs-note">Earliest jewels. Softest — prone to wear. No longer used.</div></div>
+    <div class="mohs-item"><div class="mohs-val r">9</div><div class="mohs-name">Ruby</div><div class="mohs-note">Corundum (Al₂O₃). Standard for most modern jewels.</div></div>
+    <div class="mohs-item"><div class="mohs-val r">9</div><div class="mohs-name">Sapphire</div><div class="mohs-note">Same hardness as ruby — different trace impurity. Used interchangeably.</div></div>
+    <div class="mohs-item"><div class="mohs-val g">10</div><div class="mohs-name">Diamond</div><div class="mohs-note">Hardest known material. Cap jewels (endstones) only.</div></div>
+  </div>
+  <div class="sdiv"><span class="sdiv-tag">SYNTHETIC</span><div class="sdiv-line"></div><span class="sdiv-text">Natural vs. Synthetic — Since the 1940s</span></div>
+  <div class="cg">
+    <div class="cg-card"><div class="cg-head ruby">Natural Stones (Pre-1940s)</div><div class="cg-body">Garnet, ruby, sapphire, and diamond from mines. <strong>Internal flaws</strong> are inherent in natural crystals — causing them to break more readily under stress than synthetic material.</div></div>
+    <div class="cg-card"><div class="cg-head sage">Synthetic Corundum (Post-1940s)</div><div class="cg-body">Grown in controlled conditions — <strong>no internal flaws</strong>. More uniform in hardness and structure. Stronger than natural jewels. Used almost exclusively in modern watches.</div></div>
+    <div class="cg-card"><div class="cg-head gold">Why Corundum?</div><div class="cg-body">Ruby and sapphire are both aluminium oxide — at Mohs 9, hard enough to resist steel pivot wear, yet not so brittle as to shatter under normal forces. The ideal bearing material.</div></div>
+  </div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="ph">
+    <div class="ph-eyebrow">Fundamentals · Section 02</div>
+    <h1>The <em>Purpose</em> of Jewels</h1>
+    <p>The main purpose of a jewel is to reduce friction in the balance and train — which reduces pivot wear, increases the life of the watch, and improves timekeeping performance.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="sdiv"><span class="sdiv-tag">FRICTION</span><div class="sdiv-line"></div><span class="sdiv-text">The Physics of Pivot Friction</span></div>
+  <p class="prose">When a steel pivot rotates in a brass hole, two metal surfaces rub under constant load. This wastes power that should go to the balance wheel and wears both surfaces over time. Two factors control friction: <strong>pressure</strong> between surfaces (difficult to change — set by the movement's forces) and <strong>material pairing and surface finish</strong>. Replacing brass with polished hard jewels addresses both: the harder material resists grit embedding, and the polished surface dramatically reduces friction.</p>
+  <div class="callout gold"><strong>Grit resistance matters most at the centre wheel.</strong> Centre wheel pivots are under the highest pressure in the movement. Grit embeds in soft brass and acts like sandpaper on the pivot. In a jewel hole, grit cannot embed — the harder surface simply scrapes it away. Many brass centre wheel pivot holes become visibly grooved or almost completely worn through. When investigating low amplitude, the centre wheel pivots are a critical inspection point.</div>
+  <p class="prose">Every increment of friction reduction translates to amplitude. The first seven jewels are placed where the greatest gains occur — the balance and escapement. Each additional jewel above seven delivers diminishing but worthwhile returns.</p>
+</div>
+
+<div class="panel" id="p2">
+  <div class="ph">
+    <div class="ph-eyebrow">Fundamentals · Section 03</div>
+    <h1>Jewel Count <em>by Grade</em></h1>
+    <p>The number of jewels in a movement determines exactly where they are placed. There is a standard progression — each step adds jewels to the next most-beneficial position.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <table class="jt">
+    <thead><tr><th>Count</th><th>Cumulative additions</th><th>Positions added</th></tr></thead>
+    <tbody>
+      <tr><td>7 jewels</td><td>Base</td><td>2 balance hole jewels · 2 cap jewels · 2 pallet stones · 1 roller (impulse) jewel. <strong>Greatest amplitude gain per jewel.</strong></td></tr>
+      <tr><td>9 jewels</td><td>+2</td><td>One jewel per pivot of the <strong>escape wheel pinion</strong>.</td></tr>
+      <tr><td>11 jewels</td><td>+2</td><td>One jewel per pivot of the <strong>pallet arbor</strong>.</td></tr>
+      <tr><td>15 jewels</td><td>+4</td><td>Jewels on the <strong>third- and fourth-wheel pivots</strong>.</td></tr>
+      <tr><td>17 jewels</td><td>+2</td><td>Two jewels on the <strong>centre wheel pivots</strong> (preferred) <em>or</em> two cap jewels on escape wheel pivots. Centre wheel is the better choice — highest pressure point, most wear.</td></tr>
+      <tr><td>19 jewels</td><td>+2</td><td>Two cap jewels on the <strong>escape wheel pivots</strong>.</td></tr>
+      <tr><td>21 jewels</td><td>+2</td><td>Two cap jewels on the <strong>pallet arbor</strong>.</td></tr>
+      <tr><td>23 jewels</td><td>+2</td><td>The <strong>mainspring barrel</strong> jewelled with two jewels.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>Exceptions exist.</strong> Some makers place cap jewels on the third- and fourth-wheel pivots and leave the centre wheel pivots in brass. The progression above is the most common pattern, not an absolute rule.</div>
+  <div class="sdiv"><span class="sdiv-tag">7 JEWELS</span><div class="sdiv-line"></div><span class="sdiv-text">The Base Seven — Position Map</span></div>
+  <div class="jdg">
+    <div class="jdg-title">Seven-Jewel Watch — Complete Position Map</div>
+    <div class="jdg-list">
+      <div class="jdg-item"><div class="jdg-gem"></div><div class="jdg-label">Balance hole jewels</div><div class="jdg-count">×2</div></div>
+      <div class="jdg-item"><div class="jdg-gem gld"></div><div class="jdg-label">Cap jewels (endstones)</div><div class="jdg-count">×2</div></div>
+      <div class="jdg-item"><div class="jdg-gem"></div><div class="jdg-label">Pallet stones</div><div class="jdg-count">×2</div></div>
+      <div class="jdg-item"><div class="jdg-gem"></div><div class="jdg-label">Roller / impulse jewel</div><div class="jdg-count">×1</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="ph">
+    <div class="ph-eyebrow">Jewel Types · Section 04</div>
+    <h1>Bezel vs. <em>Friction</em> Jewels</h1>
+    <p>Two fundamentally different jewel construction types have existed since roughly 1930. Understanding the difference is essential before any jewel replacement work.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="cg">
+    <div class="cg-card"><div class="cg-head ruby">Bezel-Set Jewels (Pre-1930s)</div><div class="cg-body">The jewel has a <strong>beveled corner</strong> — a thin metal bezel is rolled over it to retain it in the setting. Cannot be pressed into a plain hole. Setting this type made end shake adjustment impractical in many movements.<br><br>May be rubbed directly into the main plate, rubbed into a separate setting, or held by jewel screws.</div></div>
+    <div class="cg-card"><div class="cg-head sage">Friction Jewels — "Rubbed In" (Post-1930)</div><div class="cg-body">The jewel has <strong>straight edges</strong> — no bevel. Pressed directly into a straight hole in the plate or bridge. Simpler end shake adjustment. Used almost exclusively since the 1930s.<br><br>Flexible: works in both a bezel setting <em>and</em> a plain friction hole. A bezel jewel can only do one.</div></div>
+  </div>
+  <div class="warn"><span class="warn-icon">⚠</span><div class="warn-text"><strong>A bezel jewel cannot be frictioned into a plain hole.</strong> The beveled corner will not pass cleanly into a straight bore. A friction jewel, however, can serve either role. When replacing a jewel, identify the original type and match it.</div></div>
+</div>
+
+<div class="panel" id="p4">
+  <div class="ph">
+    <div class="ph-eyebrow">Jewel Types · Section 05</div>
+    <h1>Cap Jewel <em>Assemblies</em></h1>
+    <p>The cap jewel (endstone) and balance hole jewel work as a pair. Their surface shapes determine how the oil ring forms — and whether the pivot will be properly lubricated over time.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="sdiv"><span class="sdiv-tag">OIL RING</span><div class="sdiv-line"></div><span class="sdiv-text">Three Assembly Types</span></div>
+  <div class="oil-row">
+    <div class="oil-card">
+      <div class="oil-label">Flat + Flat</div>
+      <svg class="oil-svg" width="70" height="50" viewBox="0 0 70 50">
+        <rect x="10" y="20" width="50" height="5" rx="1" fill="#1a0e11" stroke="#c03848" stroke-width="1"/>
+        <rect x="10" y="10" width="50" height="5" rx="1" fill="#1a0e11" stroke="#c03848" stroke-width="1"/>
+        <ellipse cx="35" cy="17.5" rx="6" ry="2.5" fill="rgba(200,148,58,.4)" stroke="#c8943a" stroke-width=".5"/>
+        <circle cx="35" cy="17.5" r="1.5" fill="#1a0e11"/>
+      </svg>
+      <div class="oil-desc">Older / lower-grade. Surfaces <strong>must be perfectly parallel</strong> — any tilt causes off-centre oil ring and dry pivot.</div>
+    </div>
+    <div class="oil-card">
+      <div class="oil-label">Flat + Convex</div>
+      <svg class="oil-svg" width="70" height="50" viewBox="0 0 70 50">
+        <rect x="10" y="20" width="50" height="5" rx="1" fill="#1a0e11" stroke="#c03848" stroke-width="1"/>
+        <path d="M10 15 Q35 8 60 15 L60 10 Q35 3 10 10 Z" fill="#1a0e11" stroke="#c03848" stroke-width="1"/>
+        <ellipse cx="35" cy="15" rx="5" ry="2" fill="rgba(200,148,58,.4)" stroke="#c8943a" stroke-width=".5"/>
+        <circle cx="35" cy="15" r="1.5" fill="#1a0e11"/>
+      </svg>
+      <div class="oil-desc">Better grade. Convex shape draws oil to centre above the hole — more reliable ring. Common modern configuration.</div>
+    </div>
+    <div class="oil-card">
+      <div class="oil-label">Convex + Convex</div>
+      <svg class="oil-svg" width="70" height="50" viewBox="0 0 70 50">
+        <path d="M10 22 Q35 28 60 22 L60 26 Q35 32 10 26 Z" fill="#1a0e11" stroke="#5a8060" stroke-width="1"/>
+        <path d="M10 15 Q35 8 60 15 L60 10 Q35 3 10 10 Z" fill="#1a0e11" stroke="#5a8060" stroke-width="1"/>
+        <ellipse cx="35" cy="16.5" rx="4" ry="1.8" fill="rgba(200,148,58,.5)" stroke="#c8943a" stroke-width=".5"/>
+        <circle cx="35" cy="16.5" r="1.5" fill="#1a0e11"/>
+      </svg>
+      <div class="oil-desc"><strong>Highest grade.</strong> Both surfaces convex — closest point always above the pivot hole. Most reliably centred oil ring.</div>
+    </div>
+  </div>
+  <div class="callout gold"><strong>Best configuration: convex cap jewel facing convex balance hole jewel.</strong> The source states explicitly: "When both the cap jewel and the balance hole jewel have convex surfaces, it further enhances the performance of the assembly." Found only in the finest movements.</div>
+  <p class="prose">Capillary attraction holds the oil between the two jewels. If the surfaces are not parallel (flat-on-flat assembly), the oil is attracted toward the closest space — causing an off-centre ring that leaves the pivot dry on one arc of its rotation.</p>
+</div>
+
+<div class="panel" id="p5">
+  <div class="ph">
+    <div class="ph-eyebrow">Jewel Types · Section 06</div>
+    <h1>Olive-Hole &amp; <em>Convex</em> Jewels</h1>
+    <p>Higher-grade balance hole jewels feature an olive-shaped bore — convex on the inside surface — that reduces contact area in both watch positions and equalises resistance.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <p class="prose">The olive-shaped hole is <strong>convex inside the bore</strong>. This reduces the contact area between the pivot and the jewel when the balance staff is horizontal — less friction than a plain cylindrical bore. At the same time, it minimises sidewall resistance when the watch is vertical. The result: resistance in horizontal and vertical positions is more nearly equal — critical for consistent timekeeping across all positions.</p>
+  <div class="cg">
+    <div class="cg-card"><div class="cg-head ruby">Horizontal</div><div class="cg-body">Pivot end rests on the cap jewel. The olive bore reduces sidewall contact — pivot spins primarily on its tip against the endstone.</div></div>
+    <div class="cg-card"><div class="cg-head ruby">Vertical</div><div class="cg-body">Pivot hangs in the jewel hole by its shoulder. Olive shape reduces this sidewall friction to approach the horizontal level.</div></div>
+    <div class="cg-card"><div class="cg-head sage">Result</div><div class="cg-body">Equalised resistance means consistent amplitude in all positions — the key requirement for a watch adjusted to positions.</div></div>
+  </div>
+</div>
+
+<div class="panel" id="p6">
+  <div class="ph">
+    <div class="ph-eyebrow">Replacement · Section 07</div>
+    <h1>Removing <em>Old Jewels</em></h1>
+    <p>Two removal methods exist — one for shattered jewels, one for cracked but intact jewels. The condition of the jewel determines the approach.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="step-list">
+    <div class="step-item"><div class="step-num">A</div><div class="step-body"><div class="step-title">Jewel Badly Crushed or Shattered</div><div class="step-detail">Break it out piece by piece using a <strong>needle or pegwood sharpened to a point</strong>. Work from the <strong>opposite side of the bezel</strong> — this is the easier direction to free fragments. Do not damage the bezel during removal.</div></div></div>
+    <div class="step-item"><div class="step-num">B</div><div class="step-body"><div class="step-title">Jewel Cracked or Chipped but Still Intact</div><div class="step-detail">A staking tool could push it out, but a <strong>friction jewelling tool gives more control</strong> and is preferred. Select a flat stump with a hole large enough for the jewel to clear. The pusher should be <strong>slightly smaller than the jewel</strong>.<br><br>The bezel is typically on the flat side of the jewel — push from the opposite (convex) side.</div></div></div>
+  </div>
+  <div class="warn"><span class="warn-icon">⚠</span><div class="warn-text"><strong>Protect the bezel at all costs.</strong> The thin metal bezel is extremely delicate. Once distorted or torn, it may be impossible to re-close correctly. All removal work must prioritise preserving the bezel for re-use with the new jewel.</div></div>
+</div>
+
+<div class="panel" id="p7">
+  <div class="ph">
+    <div class="ph-eyebrow">Replacement · Section 08</div>
+    <h1>Opening <em>the Bezel</em></h1>
+    <p>Think of the bezel as a thin metal flap that was folded down to retain the jewel. It must be eased open again — incrementally and with great patience.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="step-list">
+    <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Check for Fragments First</div><div class="step-detail"><strong>Before inserting the opening tool, clear any remaining jewel fragments from under the bezel.</strong> Even tiny shards will damage the tool jaws when they spread against the fragment. Inspect under magnification.</div></div></div>
+    <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Insert the Bezel Opening Tool</div><div class="step-detail">Place the jaws inside the bezel groove. Spread slightly, then turn the tool in <strong>¼-turn increments</strong> — not 360° rotations, which distort the bezel.</div></div></div>
+    <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Incrementally Spread and Turn</div><div class="step-detail">Spread the jaws a small amount more, then turn again. Repeat until fully open. The bezel is extremely delicate — patience is not optional.</div></div></div>
+    <div class="step-item"><div class="step-num">4</div><div class="step-body"><div class="step-title">Inspect Under Magnification</div><div class="step-detail">The bezel must be visibly open all the way around. The new jewel should drop into the setting under its own weight without any force before proceeding to close.</div></div></div>
+  </div>
+</div>
+
+<div class="panel" id="p8">
+  <div class="ph">
+    <div class="ph-eyebrow">Replacement · Section 09</div>
+    <h1>Sizing <em>the New Jewel</em></h1>
+    <p>Three measurements determine jewel selection: hole size, outside diameter, and thickness. An error in any one causes a problem that only appears once the movement is running.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="step-list">
+    <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Hole Size — +0.02mm Over Pivot</div><div class="step-detail">Measure the pivot with a <strong>digital micrometer</strong>. Select a jewel with a hole <strong>0.02mm larger</strong> than the pivot measurement.<br><br>Verification without micrometer: place jewel over pivot to the shoulder, then press on the jewel edge. The correct clearance produces a tilt of approximately <strong>5°</strong>. More than this: hole is too large. Less: too tight.</div></div></div>
+    <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Outside Diameter — No Sideshake</div><div class="step-detail">The outer diameter must fit the setting with <strong>no sideshake</strong>. A loose jewel will shift over time, tilting relative to the cap jewel and disrupting the oil ring.</div></div></div>
+    <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Thickness — End Shake and Flush Seating</div><div class="step-detail">Thickness controls: pivot length in the hole, correct end shake on the pivot, and the jewel sitting <strong>flush with the setting or plate surface</strong>. Too thick: pivot binds. Too thin: excessive end shake and oil ring gap too wide — oil cannot bridge the gap.</div></div></div>
+  </div>
+  <div class="callout gold"><strong>Unknown jewel sizes:</strong> Use plug gauges or known pivots to determine hole sizes in an assortment. Drop a pivot of known diameter into the jewel — correct fit goes to the shoulder with approximately 5° tilt.</div>
+</div>
+
+<div class="panel" id="p9">
+  <div class="ph">
+    <div class="ph-eyebrow">Replacement · Section 10</div>
+    <h1>Closing <em>the Bezel</em></h1>
+    <p>With the new jewel seated, the bezel must be folded back down evenly. Two methods work — a dedicated bezel closer, or a polished needle in a pin vise.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="step-list">
+    <div class="step-item"><div class="step-num">A</div><div class="step-body"><div class="step-title">Method 1 — Bezel Closing Tool</div><div class="step-detail">Select the end-piece matching the <strong>diameter of the bezel groove</strong>. Place in the groove. Turn in small ¼-turn increments. After each pass, adjust the tool slightly smaller and turn again. Repeat until the bezel is fully crowded over the jewel edge with no sideshake.<br><br>A light film of watch oil on the tool tip helps it move smoothly without catching.</div></div></div>
+    <div class="step-item"><div class="step-num">B</div><div class="step-body"><div class="step-title">Method 2 — Polished Needle in Pin Vise</div><div class="step-detail">Shape a needle to fit the bezel groove and highly polish the tip. Hold upright, place in the groove, and move in a <strong>circular motion</strong> around the jewel, gradually folding the bezel over.<br><br>Works when no dedicated closer is available — but only if the old jewel was pushed out cleanly (so the bezel was already partially opened by pressure).</div></div></div>
+  </div>
+  <div class="callout sage"><strong>Verify the result.</strong> No sideshake. Flush with the setting surface. Bezel folded evenly all the way around. Then verify pivot fit — drop to the shoulder, tilt approximately 5° under edge pressure.</div>
+</div>
+
+<div class="panel" id="p10">
+  <div class="ph">
+    <div class="ph-eyebrow">Faults · Section 11</div>
+    <h1>Out-of-Parallel <em>Assemblies</em></h1>
+    <p>If the cap jewel and balance hole jewel are not parallel, the oil ring will be off-centre — part of the pivot's rotation runs dry.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="cg">
+    <div class="cg-card"><div class="cg-head ruby">Cause 1 — Dirt in Setting</div><div class="cg-body">Any debris left in the jewel setting after cleaning holds one edge of the cap jewel up — tilting it relative to the balance hole jewel below. The setting appears correctly installed but the surfaces are not parallel.</div></div>
+    <div class="cg-card"><div class="cg-head ruby">Cause 2 — Stripped Screw</div><div class="cg-body">When the endstone setting is held by two screws, a stripped screw won't pull the setting fully down on one end. The setting rocks slightly, the cap jewel tilts, the oil ring shifts.</div></div>
+  </div>
+  <div class="fg">
+    <div class="fg-card"><div class="fg-head bad"><div class="fg-dot"></div>Amplitude Symptom</div><div class="fg-body">The <strong>two horizontal positions show very different amplitudes</strong> from each other. One pivot spins correctly on its tip; the other has more of its cone contacting the tilted endstone. This dial-up / dial-down asymmetry is a strong diagnostic signal.</div></div>
+    <div class="fg-card"><div class="fg-head bad"><div class="fg-dot"></div>Oil Ring Symptom</div><div class="fg-body">When oiling, the oil <strong>pulls to one side of the endstone</strong> instead of forming a centred ring. The oil follows the closest space between the two non-parallel surfaces — pulling to the edge rather than sitting over the pivot hole.</div></div>
+  </div>
+  <div class="callout"><strong>Fix for flat-on-flat assemblies:</strong> Replace one jewel with a convex surface — this eliminates dependence on perfect parallelism. The oil is then attracted to the closest point (above the hole, not to one side). Alternatively trace and eliminate the cause of tilt: clean the setting thoroughly, replace any stripped screws.</div>
+</div>
+
+<div class="panel" id="p11">
+  <div class="ph">
+    <div class="ph-eyebrow">Faults · Section 12</div>
+    <h1>Oil Space <em>Faults</em></h1>
+    <p>Too much gap and the oil cannot be pushed through. Too little gap and the ring is too large, then breaks away. Both extremes leave the pivot dry.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="fg" style="grid-template-columns:1fr 1fr 1fr;">
+    <div class="fg-card"><div class="fg-head bad"><div class="fg-dot"></div>Too Much Space</div><div class="fg-body"><strong>Cause:</strong> Setting not fully seated — endstone too high.<br><br>Oil cannot be pushed through. If forced, it takes too much oil to form any ring — that excess breaks away and runs down the cone of the balance staff. Pivot runs dry.</div></div>
+    <div class="fg-card"><div class="fg-head bad"><div class="fg-dot"></div>Jewels Touching</div><div class="fg-body"><strong>Cause:</strong> Wrong jewel thickness — cap jewel too thick.<br><br>Oil cannot pass at all, or forms an oversized ring that immediately breaks away into the jewel groove. Usually result of incorrect replacement jewel thickness.</div></div>
+    <div class="fg-card"><div class="fg-head ok"><div class="fg-dot"></div>Correct Assembly</div><div class="fg-body">Oil ring is <strong>concentric and correct diameter</strong>. Gap is correct — oil pushed through normally, stable ring centred on the pivot hole. Will last the required service interval given clean jewels and quality oil.</div></div>
+  </div>
+</div>
+
+<div class="panel" id="p12">
+  <div class="ph">
+    <div class="ph-eyebrow">Faults · Section 13</div>
+    <h1>Over-Oiling <em>Consequences</em></h1>
+    <p>An off-centre ring tempts the watchmaker to add more oil. This creates a worse problem than the original fault.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="step-list">
+    <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">The Temptation</div><div class="step-detail">When the oil ring is off-centre, the far edge may not reach the pivot hole. The natural response is to add oil until coverage is achieved. This is incorrect.</div></div></div>
+    <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">What Actually Happens</div><div class="step-detail">The outer edge of an oversized ring <strong>breaks away and runs into the groove around the jewel</strong>. Once in the groove, it no longer contacts the pivot. The pivot runs completely dry shortly after.</div></div></div>
+    <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Oil Migrates to the Balance Spring</div><div class="step-detail">Oil in the groove around the jewel <strong>wicks up the balance spring</strong>. Oil on the spring changes its elasticity, disrupts isochronism, and causes rate variation. This is extremely difficult to correct without a complete service.</div></div></div>
+  </div>
+  <div class="warn"><span class="warn-icon">⚠</span><div class="warn-text"><strong>The correct response to an off-centre oil ring is to fix its cause — not add more oil.</strong> Identify why the jewels are not parallel (dirt, stripped screw, wrong jewel type) and correct it. Only then oil the corrected assembly with the correct quantity.</div></div>
+</div>
+
+<div class="panel" id="p13">
+  <div class="ph">
+    <div class="ph-eyebrow">Settings · Section 14</div>
+    <h1>Cap Jewel <em>Setting Styles</em></h1>
+    <p>Settings for cap jewels varied significantly between American, European, and English watches. Correct identification is essential for reassembly.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="sdiv"><span class="sdiv-tag">AMERICAN</span><div class="sdiv-line"></div><span class="sdiv-text">Three Common American Styles</span></div>
+  <div class="cg">
+    <div class="cg-card"><div class="cg-head gold">View A — Most Common</div><div class="cg-body">Counterbored for two screwheads. Sits <strong>flush with the balance cock or plate</strong>. Used for balance staff on all grades; also for escape wheel and pallet arbor pivots on high-grade watches. Brass (average) or gold alloy (high grade).</div></div>
+    <div class="cg-card"><div class="cg-head gold">View B — Extended Type</div><div class="cg-body">Ledge sits flush with the plate surface; the screwheads tighten against this ledge rather than countersinks. The top of the setting <strong>stands above flush</strong> with the plate.</div></div>
+    <div class="cg-card"><div class="cg-head gold">View C — Extended, Gold Alloy</div><div class="cg-body">Very high-grade watches only. Gold alloy. Counterbored for two screwheads. Found in Howard watches and some Walthams. Similar styles appear in some English and Swiss watches.</div></div>
+  </div>
+  <div class="sdiv"><span class="sdiv-tag">EUROPEAN</span><div class="sdiv-line"></div><span class="sdiv-text">European Multi-Part Assembly</span></div>
+  <p class="prose">The European-origin style is a multi-part assembly. The cap jewel rests on top of the balance cock — not bezeled into a setting. A cap piece fits into the regulator's hole; its beveled hole presses the cap jewel down against the cock. Two cap screws pass through the cock from below and screw into the cap. Two requirements: the cap must press the jewel tight enough that it cannot rock, AND allow the regulator to be moved with the correct friction.</p>
+  <div class="sdiv"><span class="sdiv-tag">LOWER &amp; UPPER</span><div class="sdiv-line"></div><span class="sdiv-text">Other Setting Styles</span></div>
+  <p class="prose">Lower cap jewel settings (under the dial) come in three shapes: figure-eight, part figure-eight/part round, and fully round — each fitting a matching recess in the plate. Usually brass or steel. Upper settings (escape wheel and pallet fork) are gold alloy in high-grade watches, brass or steel in lower grades.</p>
+</div>
+
+<div class="panel" id="p14">
+  <div class="ph">
+    <div class="ph-eyebrow">Settings · Section 15</div>
+    <h1>Diamond <em>Cap Jewels</em></h1>
+    <p>Diamond endstones were used in marine chronometers and the finest American and English lever watches — where a pivot rests on the cap jewel nearly continuously.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <p class="prose">Ruby and sapphire (Mohs 9) can eventually wear at the contact point where the pivot tip rests. Diamond (Mohs 10) resists this wear almost completely. The advantage is greatest where the pivot rests on the cap jewel <strong>all the time</strong> — as in a marine chronometer maintaining a face-up orientation at sea for months. For a pocket watch, the equivalent is overnight: placed on its back, the upper pivot rests on the upper cap jewel until morning.</p>
+  <div class="cg">
+    <div class="cg-card"><div class="cg-head gold">Marine Chronometers</div><div class="cg-body">Primary application. Face-up at sea almost continuously — the upper balance pivot rests on the cap jewel <strong>without interruption</strong>. Diamond's resistance to tip wear was essential for long-term accuracy on extended voyages.</div></div>
+    <div class="cg-card"><div class="cg-head gold">Waltham Premier</div><div class="cg-body">The Waltham Watch Company produced the Waltham Premier — an exceptional high-grade pocket watch featuring <strong>three pairs of diamond cap jewels</strong>. A pinnacle of American watchmaking.</div></div>
+    <div class="cg-card"><div class="cg-head gold">English Lever Watches</div><div class="cg-body">Diamond cap jewels were used on the balance cock of many fine old English lever watches. Typically only the upper pivot received the diamond endstone — the position most subject to constant load during wearing.</div></div>
+  </div>
+</div>
+
+<div class="panel" id="p15">
+  <div class="ph">
+    <div class="ph-eyebrow">Special Types · Section 16</div>
+    <h1>English Lever <em>&amp; Verge</em> Arrangements</h1>
+    <p>Two earlier systems that predate modern screw-retained settings: the dovetailed English lever assembly and the verge watch bearing arrangements.</p>
+    <div class="ph-rule"></div>
+  </div>
+  <div class="sdiv"><span class="sdiv-tag">ENGLISH LEVER</span><div class="sdiv-line"></div><span class="sdiv-text">Dovetailed Bar Assembly</span></div>
+  <p class="prose">In the English full-plate lever watch, balance hole and cap jewels are not held with screws. A dovetailed bar containing the cap jewel slides across a matching dovetail in the balance hole jewel setting. The complete assembly is fastened to the underside of the upper plate. A clever and elegant system requiring no screws in the traditional sense.</p>
+  <div class="sdiv"><span class="sdiv-tag">VERGE</span><div class="sdiv-line"></div><span class="sdiv-text">French and English Verge Arrangements</span></div>
+  <div class="cg">
+    <div class="cg-card"><div class="cg-head ruby">French Verge</div><div class="cg-body">The cap for the lower staff pivot is made from <strong>hardened steel</strong>. The pivot works in a hole in the assembly with the steel cap over the pivot end.</div></div>
+    <div class="cg-card"><div class="cg-head sky">English Verge</div><div class="cg-body">A <strong>brass plug</strong> set into the potence. Drilled only partway through — a <strong>blind hole</strong> — with the pivot working inside it. The blind bottom acts as the cap. Bottom smoothed to reduce resistance. Hard brass used to minimise wear in the bore.</div></div>
+  </div>
+  <div class="callout sky"><strong>The English verge blind hole</strong> is essentially a brass cap jewel substitute. Hard brass partially addresses the wear problem — but cannot match the wear resistance of corundum or diamond. The transition to jewelled bearings was a dramatic improvement from this earlier arrangement.</div>
+</div>
+
+</main>
+</div>
+<script>
+function nav(el,id){
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  if(window.innerWidth<=820)document.querySelector('.sidebar').classList.remove('open');
+  document.querySelector('.main').scrollTop=0;
+}
+</script>
+</body>
+</html>
